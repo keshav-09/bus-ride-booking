@@ -147,9 +147,8 @@ model Booking {
   fromLocationId String
   toLocationId   String
   date           DateTime
-  availableSeats Int
   seatNumber     Int
-  status         String
+  bookingStatus  String
   fareId         String
   bookedAt       DateTime @default(now())
 

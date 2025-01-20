@@ -58,6 +58,7 @@ export const addBooking = async (data: any) => {
 
         return newBooking;
     } catch (error) {
+        console.log(error);
         // Handle validation errors
         if (error instanceof Error && "issues" in error) {
             return { error: "Validation failed", details: error.issues };

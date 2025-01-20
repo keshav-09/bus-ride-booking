@@ -14,6 +14,8 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 export default function Payment() {
   const searchParams = useSearchParams();
   const amountString = searchParams.get("amount") ?? "0";
+  const bookingId = searchParams.get("booking_id") as string;
+  
   const amount = parseFloat(amountString);
 
   if (!amount || amount <= 0) {
