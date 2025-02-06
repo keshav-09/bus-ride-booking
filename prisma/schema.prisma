@@ -73,3 +73,94 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
 }
+
+model Vehicle {
+  id     String  @id @default(cuid())
+  name   String
+  number String  @unique
+  seats  Int
+  type   String
+  routes Route[]
+
+  @@map(name: "vehicles")
+}
+
+model Location {
+  id   String @id @default(cuid())
+  name String @unique
+
+  locationOrigin             Route[]   @relation(name: "LocationOrigin")
+  locationDestination        Route[]   @relation(name: "LocationDestination")
+  fareLocationOrigin         Fare[]    @relation(name: "FareLocationOrigin")
+  fareLocationDestination    Fare[]    @relation(name: "FareLocationDestination")
+  bookingLocationOrigin      Booking[] @relation(name: "BookingLocationOrigin")
+  bookingLocationDestination Booking[] @relation(name: "BookingLocationDestination")
+
+  @@map(name: "locations")
+}
+
+model Route {
+  id              String   @id @default(cuid())
+  originId        String
+  destinationId   String
+  vehicleId       String
+  departureTime   String
+  arrivalTime     String
+  createdByUserId String
+
+  origin      Location @relation(name: "LocationOrigin", fields: [originId], references: [id], onDelete: Cascade) // Relationship to origin location
+  destination Location @relation(name: "LocationDestination", fields: [destinationId], references: [id], onDelete: Cascade) // Relationship to destination location
+
+  vehicle   Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  createdBy User      @relation("RouteCreatedBy", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  fares     Fare[]
+  bookings  Booking[]
+
+  @@map(name: "routes")
+}
+
+model Fare {
+  id              String @id @default(cuid())
+  routeId         String
+  fromLocationId  String
+  toLocationId    String
+  price           Float
+  createdByUserId String
+
+  origin      Location @relation(name: "FareLocationOrigin", fields: [fromLocationId], references: [id], onDelete: Cascade) // Relationship to origin location
+  destination Location @relation(name: "FareLocationDestination", fields: [toLocationId], references: [id], onDelete: Cascade) // Relationship to destination location
+
+  route     Route     @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  createdBy User      @relation("FareCreatedBy", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  bookings  Booking[]
+
+  @@map(name: "fares")
+}
+
+model Booking {
+  id             String   @id @default(cuid())
+  routeId        String
+  userId         String
+  fromLocationId String
+  toLocationId   String
+  date           DateTime
+  seatNumber     Int
+  bookingStatus  String
+  fareId         String
+  bookedAt       DateTime @default(now())
+
+  origin      Location @relation(name: "BookingLocationOrigin", fields: [fromLocationId], references: [id], onDelete: Cascade)
+  destination Location @relation(name: "BookingLocationDestination", fields: [toLocationId], references: [id], onDelete: Cascade)
+
+  route Route @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fare  Fare  @relation(fields: [fareId], references: [id], onDelete: Cascade)
+
+  @@map(name: "bookings")
+}
+
+model Manager {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+}

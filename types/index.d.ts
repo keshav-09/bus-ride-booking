@@ -31,14 +31,3 @@ export type MarketingConfig = {
   mainNav: MainNavItem[];
 };
 
-export type SidebarNavItem = {
-  title: string;
-  items: NavItem[];
-  authorizeOnly?: UserRole;
-  icon?: keyof typeof Icons;
-};
-
-export type DocsConfig = {
-  mainNav: MainNavItem[];
-  sidebarNav: SidebarNavItem[];
-};

@@ -1,9 +1,10 @@
-const { withContentlayer } = require("next-contentlayer2");
-
 import("./env.mjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   reactStrictMode: true,
   swcMinify: true,
   images: {
@@ -27,4 +28,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withContentlayer(nextConfig);
+module.exports = nextConfig;

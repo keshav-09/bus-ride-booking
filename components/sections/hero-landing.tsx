@@ -34,14 +34,14 @@ export default async function HeroLanding() {
 
         <div className="flex justify-center space-x-2">
           <Link
-            href="/docs"
+href="/login"
             prefetch={true}
             className={cn(
               buttonVariants({ rounded: "xl", size: "lg" }),
               "gap-2 px-5 text-[15px]",
             )}
           >
-            <span>Installation Guide</span>
+<span>Go to Login Page</span>
             <Icons.arrowRight className="size-4" />
           </Link>
           <Link
