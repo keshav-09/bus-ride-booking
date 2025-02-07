@@ -190,9 +190,9 @@ export default function TransactionsList() {
 
   return (
     <div className="w-full">
-      <h2 className="mb-4 text-lg font-semibold">Route List</h2>
 
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-xl font-bold">Route List</h2>
         <button
           onClick={handleAdd}
           className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"

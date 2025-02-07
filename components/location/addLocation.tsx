@@ -51,7 +51,7 @@ export default function AddLocationPage() {
 
   return (
     <FormProvider {...methods}>
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto ">
         <h1 className="mb-4 text-3xl font-bold">Add Location</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -21,6 +21,9 @@ export const getUserTicketsById = async (id: string) => {
                 origin: true,
                 destination: true,
                 fare: true,
+            },
+            orderBy: {
+                bookedAt: "desc",
             }
         })
         return tickets;

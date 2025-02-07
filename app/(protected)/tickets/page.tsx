@@ -1,4 +1,3 @@
-import { getAllBookings } from "@/lib/booking"
 import { getCurrentUser } from "@/lib/session";
 import { getUserTicketsById } from "@/lib/ticket";
 import { MoveRight } from "lucide-react";
@@ -16,7 +15,7 @@ const TicketsPage = async () => {
                     return (
                         <div>
                             <div>
-                                <div className="mb-6 rounded-lg border border-gray-200 bg-white px-20 py-10 shadow-lg">
+                                <div className="mb-12 rounded-lg border border-gray-200 bg-white px-20 py-10 shadow-lg">
                                     <div className="flex justify-between">
                                         <h3 className="mb-4 text-2xl font-semibold uppercase text-gray-800">
                                             {ticket.user.name}
@@ -32,8 +31,7 @@ const TicketsPage = async () => {
                                                 <h2 className="text-2xl font-bold text-zinc-800">{ticket.route.origin.name}</h2>
                                                 <p className="text-zinc-700"></p>
                                                 <p className="text-zinc-700">
-                                                    {new Date(ticket.route.departureTime).toLocaleTimeString()}
-                                                </p>
+                                                    {ticket.route.departureTime}                                                </p>
                                             </div>
                                             <MoveRight className="my-auto" />
                                             <div>

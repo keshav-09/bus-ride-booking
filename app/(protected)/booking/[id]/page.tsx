@@ -1,18 +1,3 @@
-// import { DashboardHeader } from "@/components/dashboard/header"
-
-// const BookingPage = () => {
-
-//     return (
-//         <>
-//             <DashboardHeader
-//                 heading="Ticket Booking"
-//             />
-//         </>
-//     )
-// }
-
-// export default BookingPage
-
 
 import BookingConfirm from "@/components/booking/booking-confirm";
 import { DashboardHeader } from "@/components/dashboard/header";
@@ -41,6 +26,7 @@ const BookingConfirmation = async ({ params }: BookingPageProps) => {
                 id={id as string}
                 userid={user?.id as string}
                 fare={bus?.price as number}
+                seats = {bus?.route.vehicle.seats as number}
             />
         </>
 

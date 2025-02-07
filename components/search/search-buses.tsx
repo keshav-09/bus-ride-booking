@@ -38,15 +38,15 @@ const SearchBuses = () => {
                 const response = await fetch("/api/locations");
                 const data = await response.json();
 
-                console.log("Locations: ",data)
+                console.log("Locations: ", data)
 
                 if (response.ok) {
-                  setLocations(data.locations || []); // Ensure locations is set to an empty array if missing
-                  console.log(response)
+                    setLocations(data.locations || []); // Ensure locations is set to an empty array if missing
+                    console.log(response)
                 } else {
-                  setError(data.error || "Failed to fetch locations");
+                    setError(data.error || "Failed to fetch locations");
                 }
-              } catch (error) {
+            } catch (error) {
                 setError("Error fetching locations");
             } finally {
                 setLoading(false);
@@ -80,7 +80,7 @@ const SearchBuses = () => {
                 throw new Error("Failed to fetch buses.");
             }
 
-            const  {fares=[], }:{fares:Bus[]} = await response.json();
+            const { fares = [], }: { fares: Bus[] } = await response.json();
 
             if (fares.length > 0) {
                 setAvailableBuses(fares); // Update state with search results
@@ -95,20 +95,16 @@ const SearchBuses = () => {
 
     return (
         <>
-
             <div className="flex items-center justify-center ">
-                <form method="get" className=" flex h-[10vh] w-[60vw] rounded-3xl" onSubmit={handleSearch} >
-
+                <form method="get" className="flex h-[8vh] w-[50vw] items-center" onSubmit={handleSearch}>
                     {/* Origin Dropdown */}
-                    <div className="h-full w-2/5 rounded-3xl">
-
+                    <div className="w-1/3">
                         <select
                             id="origin"
                             name="origin"
-                            // defaultValue={origin || ""}
-                            className="sm:text-md size-full rounded-l-3xl border-gray-300 px-8 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="w-full rounded-lg border border-gray-400 bg-white px-4 py-2 text-black focus:border-gray-500 focus:outline-none"
                         >
-                            <option value="" disabled>
+                            <option value="" disabled selected>
                                 Select Origin
                             </option>
                             {locations.map((loc) => (
@@ -120,15 +116,13 @@ const SearchBuses = () => {
                     </div>
 
                     {/* Destination Dropdown */}
-                    <div className="h-full w-2/5 rounded-3xl bg-slate-500">
-
+                    <div className="w-1/3 mx-2">
                         <select
-                            id="desination"
+                            id="destination"
                             name="destination"
-                            className="sm:text-md size-full border-gray-300 px-8 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="w-full rounded-lg border border-gray-400 bg-white px-4 py-2 text-black focus:border-gray-500 focus:outline-none"
                         >
-
-                            <option value="" disabled>
+                            <option value="" disabled selected>
                                 Select Destination
                             </option>
                             {Array.isArray(locations) && locations.map((loc) => (
@@ -142,40 +136,38 @@ const SearchBuses = () => {
                     {/* Search Button */}
                     <button
                         type="submit"
-                        className="w-1/5 rounded-r-3xl bg-zinc-900 px-5 py-2 text-lg text-white hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:ring-offset-2"
+                        className=" rounded-lg bg-black px-5 py-2 text-white font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400"
                     >
                         Search
                     </button>
                 </form>
             </div>
 
-            <EmptyPlaceholder>
-                {availableBuses.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {availableBuses.map((bus) => (
-                            
-                            <AvailableBusCard
-                                id={bus.id}
-                                busName={bus.route.vehicle.name}
-                                startLocation={bus.route?.origin.name}
-                                startTime={bus.route?.departureTime}
-                                endLocation={bus.route?.destination.name}
-                                endTime={bus.route?.arrivalTime}
-                                vehicleNumber={bus.route?.vehicle.number}
-                                userStartLocation={bus.origin.name}
-                                userEndLocation={bus.destination.name}
-                                fare={bus.price}
-                                type={bus.route?.vehicle.type}
-                                availableSeats={bus.route?.vehicle.seats}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyPlaceholder>
-                        <p>No buses found for the selected route.</p>
-                    </EmptyPlaceholder>
-                )}
-            </EmptyPlaceholder>
+            {availableBuses.length > 0 ? (
+                <div className="flex flex-wrap gap-2 ">
+                    {availableBuses.map((bus) => (
+
+                        <AvailableBusCard
+                            id={bus.id}
+                            busName={bus.route.vehicle.name}
+                            startLocation={bus.route?.origin.name}
+                            startTime={bus.route?.departureTime}
+                            endLocation={bus.route?.destination.name}
+                            endTime={bus.route?.arrivalTime}
+                            vehicleNumber={bus.route?.vehicle.number}
+                            userStartLocation={bus.origin.name}
+                            userEndLocation={bus.destination.name}
+                            fare={bus.price}
+                            type={bus.route?.vehicle.type}
+                            availableSeats={bus.route?.vehicle.seats}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <EmptyPlaceholder>
+                    <p>No buses found for the selected route.</p>
+                </EmptyPlaceholder>
+            )}
         </>
     );
 };

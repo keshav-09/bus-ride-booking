@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
-import AddForm from "@/components/vehicle/AddForm"; 
+import AddForm from "@/components/vehicle/AddForm";
 
 export const metadata = constructMetadata({
   title: "Add Vehicle – Next Template",
@@ -14,7 +14,7 @@ export default async function AdminPage() {
     redirect("/login");
   }
 
- 
+
 
   try {
     return (

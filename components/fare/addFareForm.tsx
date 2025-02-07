@@ -43,6 +43,7 @@ export default function AddFarePage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data,"vasb")
       setRoutes(data);
     } catch (error) {
     }
@@ -97,7 +98,7 @@ export default function AddFarePage() {
 
   return (
     <FormProvider {...methods}>
-      <div className="container mx-auto py-8">
+      <div className="mx-auto mt-8 w-full rounded-md bg-white p-6 shadow-md md:w-1/2">
         <h1 className="mb-4 text-3xl font-bold">Add Fare</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -122,7 +123,7 @@ export default function AddFarePage() {
                   {routes.map((route) => (
                     <option key={route.id} value={route.id}>
                       {route.origin?.name && route.destination?.name
-                        ? `${route.origin.name} to ${route.destination.name} (${route.id})`
+                        ? `${route.origin.name}(${route.arrivalTime}) to ${route.destination.name}(${route.departureTime})-(${route.vehicle.name})`
                         : `Route ${route.id}`}
                     </option>
                   ))}
@@ -233,10 +234,10 @@ export default function AddFarePage() {
             >
               Cancel
             </button>
-
+            
             <button
               type="submit"
-              className="rounded-md bg-blue-600 px-4 py-2 text-white"
+              className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Submit
             </button>

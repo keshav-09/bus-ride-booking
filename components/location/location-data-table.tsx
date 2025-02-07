@@ -28,8 +28,8 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner"
 
 export type Location = {
-  id : string;
-  name : string;
+  id: string;
+  name: string;
 }
 export function DataTableDemo() {
   const [locations, setLocations] = React.useState<{ id: string; name: string }[]>([]);
@@ -86,13 +86,13 @@ export function DataTableDemo() {
 
   const handleEditF = (location: Location) => {
     console.log("Orginal Name : ", locationName)
-     const query = new URLSearchParams({
-       name: location.name,
-     }).toString();
- 
-     const url = `/dashboard/location/create/${location.id}?${query}`;
-     router.push(url);
-   };
+    const query = new URLSearchParams({
+      name: location.name,
+    }).toString();
+
+    const url = `/dashboard/location/create/${location.id}?${query}`;
+    router.push(url);
+  };
 
   const handleView = (location: { id: string; name: string }) => {
     setViewMode(true);
@@ -138,7 +138,7 @@ export function DataTableDemo() {
         <div className="flex justify-end space-x-2">
           <Button
             variant="link"
-            onClick={() => handleView(row.original)} 
+            onClick={() => handleView(row.original)}
           >
             <FontAwesomeIcon icon={faEye} />
           </Button>
@@ -176,7 +176,9 @@ export function DataTableDemo() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-xl font-bold">Location Data Table</h1>
+
         <Button
           className="max-w-sm"
           onClick={() => router.push("/location/addForm")}
@@ -195,9 +197,9 @@ export function DataTableDemo() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -205,114 +207,113 @@ export function DataTableDemo() {
             ))}
           </TableHeader>
           <TableBody>
-              {table.getRowModel() && table.getRowModel().rows?.length > 0 ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
-                  </TableCell>
+            {table.getRowModel() && table.getRowModel().rows?.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )}
-            </TableBody>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </div>
       <div className="mt-4 flex items-center justify-between">
-              <div className="text-sm">
-                Showing {Math.min((pageIndex - 1) * pageSize + 1, total)}–
-                {Math.min(pageIndex * pageSize, total)} of {total} results
-              </div>
-              <div className="flex space-x-2">
+        <div className="text-sm">
+          Showing {Math.min((pageIndex - 1) * pageSize + 1, total)}–
+          {Math.min(pageIndex * pageSize, total)} of {total} results
+        </div>
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
+            disabled={pageIndex === 1}
+          >
+            Previous
+          </Button>
+          {pageIndex > 3 && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(1)}
+              >
+                1
+              </Button>
+              {pageIndex > 4 && <span className="text-gray-500">...</span>}
+            </>
+          )}
+          {Array.from(
+            { length: Math.min(5, totalPages) }, // Only show up to 5 page numbers
+            (_, i) => {
+              const page = Math.max(1, pageIndex - 2) + i; // Center around the current page
+              if (page > totalPages) return null;
+              return (
                 <Button
-                  variant="outline"
+                  key={page}
+                  variant={pageIndex === page ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
-                  disabled={pageIndex === 1}
+                  onClick={() => setPageIndex(page)}
                 >
-                  Previous
+                  {page}
                 </Button>
-                {pageIndex > 3 && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPageIndex(1)}
-                    >
-                      1
-                    </Button>
-                    {pageIndex > 4 && <span className="text-gray-500">...</span>}
-                  </>
-                )}
-                {Array.from(
-                  { length: Math.min(5, totalPages) }, // Only show up to 5 page numbers
-                  (_, i) => {
-                    const page = Math.max(1, pageIndex - 2) + i; // Center around the current page
-                    if (page > totalPages) return null;
-                    return (
-                      <Button
-                        key={page}
-                        variant={pageIndex === page ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setPageIndex(page)}
-                      >
-                        {page}
-                      </Button>
-                    );
-                  },
-                )}
-                {pageIndex < totalPages - 2 && (
-                  <>
-                    {pageIndex < totalPages - 3 && (
-                      <span className="text-gray-500">...</span>
-                    )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPageIndex(totalPages)}
-                    >
-                      {totalPages}
-                    </Button>
-                  </>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setPageIndex((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={pageIndex === totalPages}
-                >
-                  Next
-                </Button>
-              </div>
+              );
+            },
+          )}
+          {pageIndex < totalPages - 2 && (
+            <>
+              {pageIndex < totalPages - 3 && (
+                <span className="text-gray-500">...</span>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(totalPages)}
+              >
+                {totalPages}
+              </Button>
+            </>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setPageIndex((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={pageIndex === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+      {isOpen && (
+        <div className="bg-/50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="w-96 rounded-md bg-white p-6 shadow-md">
+            <h3 className="mb-4 text-lg font-semibold">View Location</h3>
+            <p>
+              <strong>Name:</strong> {locationName}
+            </p>
+            <div className="mt-6 text-right">
+              <button
+                className="rounded-md bg-gray-500 px-4 py-2 text-white"
+                onClick={handleCloseDialog}
+              >
+                Close
+              </button>
             </div>
-            {isOpen && (
-              <div className="bg-/50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-                <div className="w-96 rounded-md bg-white p-6 shadow-md">
-                  <h3 className="mb-4 text-lg font-semibold">View Location</h3>
-                  <p>
-                    <strong>Name:</strong> {locationName}
-                  </p>
-                  <div className="mt-6 text-right">
-                    <button
-                      className="rounded-md bg-gray-500 px-4 py-2 text-white"
-                      onClick={handleCloseDialog}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
-        );
-      }
-      
+        </div>
+      )}
+    </div>
+  );
+}

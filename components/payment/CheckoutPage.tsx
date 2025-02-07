@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {
-  useStripe,
-  useElements,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
+import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 
-const CheckoutPage = ({ amount }: { amount: number }) => {
+const CheckoutPage = ({ amount, bookingId }: { amount: number; bookingId: string }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentBookingId, setCurrentBookingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (bookingId) {
+      setCurrentBookingId(bookingId);
+    }
+  }, [bookingId]);
+
+  console.log(currentBookingId, "Current Booking ID");
+
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
@@ -25,7 +31,9 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       .then((data) => setClientSecret(data.clientSecret));
   }, [amount]);
 
+  console.log(bookingId, "bookingId")
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
     setLoading(true);
 
@@ -40,27 +48,33 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       setLoading(false);
       return;
     }
-
+    console.log(bookingId, "inside the booking api");
     const { error } = await stripe.confirmPayment({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/tickets`,
-        
-
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/payment-success?bookingId=${bookingId}`,
       },
-    });
 
+    });
+    console.log(bookingId, "outside the api")
     if (error) {
       setErrorMessage(error.message);
       window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/payment-fail`;
     } else {
-      // Payment UI automatically closes and redirects to return_url
+      console.log(currentBookingId, "inside the booking api");
+      await fetch("/api/update-booking-status", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookingId: currentBookingId, status: "successful" }),
+      });
+      console.log(bookingId, "Booking ID at component render");
+
     }
     setLoading(false);
   };
-
- 
 
   if (!clientSecret || !stripe || !elements) {
     return (
@@ -94,4 +108,3 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
 };
 
 export default CheckoutPage;
-
